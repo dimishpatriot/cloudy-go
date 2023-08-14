@@ -1,19 +1,19 @@
-package main
+package templates
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"math/rand"
 	"sync"
 	"time"
+
+	"github.com/dimishpatriot/cloudy-go/pkg/services"
 )
 
 // CircuitBreaker (Размыкатель цепи) автоматически отключает
 // сервисные функции в ответ на вероятную неисправность, чтобы
 // предотвратить более крупные или каскадные отказы, устранить повторяющиеся
 // ошибки и обеспечить разумную реакцию на ошибки.
-func CircuitBreaker(circuit Circuit, failThreshold uint) Circuit {
+func CircuitBreaker(circuit services.Circuit, failThreshold uint) services.Circuit {
 	countFails := 0
 	lastAttempt := time.Now()
 	var m sync.RWMutex
@@ -43,27 +43,5 @@ func CircuitBreaker(circuit Circuit, failThreshold uint) Circuit {
 
 		countFails = 0
 		return res, nil
-	}
-}
-
-func getFromOzon(ctx context.Context) (string, error) {
-	chance := rand.Float32()
-	if chance > 0.6 {
-		return fmt.Sprint(chance), nil
-	}
-	return "", errors.New("bad chances")
-}
-
-func runBreaker() {
-	br := CircuitBreaker(getFromOzon, 2)
-	for i := 0; i < 100; i++ {
-		fmt.Printf("%d: ", i)
-		res, err := br(context.Background())
-		if err != nil {
-			fmt.Printf("error: %s\n", err)
-		} else {
-			fmt.Printf("success: %s\n", res)
-		}
-		<-time.After(100 * time.Millisecond)
 	}
 }

@@ -1,10 +1,12 @@
-package main
+package templates
 
 import (
 	"context"
 	"fmt"
 	"sync"
 	"time"
+
+	"github.com/dimishpatriot/cloudy-go/pkg/services"
 )
 
 // DebounceFirst - при каждом вызове внешней функции – независимо от результата
@@ -12,11 +14,11 @@ import (
 //
 // Любой последующий вызов, выполненный до истечения интервала,
 // игнорируется, а вызов, выполненный после интервала, передается внутренней функции.
-func DebounceFirst(circuit Circuit, d time.Duration) Circuit {
-	var m sync.Mutex
+func DebounceFirst(circuit services.Circuit, d time.Duration) services.Circuit {
 	var threshold time.Time
 	var res string
 	var err error
+	var m sync.Mutex
 
 	return func(ctx context.Context) (string, error) {
 		m.Lock()
@@ -32,22 +34,5 @@ func DebounceFirst(circuit Circuit, d time.Duration) Circuit {
 
 		res, err = circuit(ctx)
 		return fmt.Sprint(res, " - ", threshold), err
-	}
-}
-
-func search(ctx context.Context) (string, error) {
-	return time.Now().String(), nil
-}
-
-func runDebounceFirst() {
-	dbn := DebounceFirst(search, time.Millisecond*200)
-
-	for i := 0; i < 3; i++ {
-		for j := 0; j < 3; j++ {
-			res, _ := dbn(context.Background())
-			fmt.Printf("[%d, %d] res: %s\n", i, j, res)
-			<-time.After(time.Millisecond * 100)
-		}
-		<-time.After(time.Millisecond * 150)
 	}
 }

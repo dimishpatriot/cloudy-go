@@ -1,13 +1,12 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"strconv"
-)
 
-type Circuit func(context.Context) (string, error)
+	"github.com/dimishpatriot/cloudy-go/internal/runners"
+)
 
 type App struct {
 	name string
@@ -18,20 +17,24 @@ func main() {
 	apps := []App{
 		{
 			name: "runContextCancelling",
-			f:    runContextCancelling,
+			f:    runners.ContextCancelling,
 		},
 		{
 			name: "runBreaker",
-			f:    runBreaker,
+			f:    runners.CircuitBreaker,
 		},
 		{
 			name: "runDebounceFirst",
-			f:    runDebounceFirst,
+			f:    runners.DebounceFirst,
+		},
+		{
+			name: "runDebounceLast",
+			f:    runners.DebounceLast,
 		},
 	}
 
 	for i, a := range apps {
-		fmt.Printf("[%d] %s\n", i, a.name)
+		fmt.Printf("[%d]\t%s\n", i, a.name)
 	}
 
 	var answer string
