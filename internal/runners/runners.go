@@ -66,3 +66,18 @@ func DebounceLast() {
 		<-time.After(time.Millisecond * 150)
 	}
 }
+
+func Retry() {
+	rr := templates.Retry(services.FlakyService, 3, time.Millisecond*100)
+
+	for i := 0; i < 10; i++ {
+		fmt.Printf("%d: ", i)
+		res, err := rr(context.Background())
+		if err != nil {
+			fmt.Printf("error:\t%s\n", err)
+		} else {
+			fmt.Printf("success:\t%s\n", res)
+		}
+		<-time.After(200 * time.Millisecond)
+	}
+}

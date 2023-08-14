@@ -31,6 +31,10 @@ func main() {
 			name: "runDebounceLast",
 			f:    runners.DebounceLast,
 		},
+		{
+			name: "runRetry",
+			f:    runners.Retry,
+		},
 	}
 
 	for i, a := range apps {
