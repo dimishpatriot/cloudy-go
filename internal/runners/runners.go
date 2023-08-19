@@ -3,6 +3,7 @@ package runners
 import (
 	"context"
 	"fmt"
+	"math/rand"
 	"time"
 
 	"github.com/dimishpatriot/cloudy-go/pkg/services"
@@ -79,5 +80,20 @@ func Retry() {
 			fmt.Printf("success:\t%s\n", res)
 		}
 		<-time.After(200 * time.Millisecond)
+	}
+}
+
+func Throttle() {
+	th := templates.Throttle(services.GetTime, 4, time.Millisecond*200)
+
+	for i := 0; i < 3; i++ {
+		for j := 0; j < 30; j++ {
+			res, err := th(context.Background())
+			t := time.Duration(rand.Intn(150)) * time.Millisecond
+			fmt.Printf("[%d %d]\t%d\tres:%s\terr:%v\n", i, j, t.Milliseconds(), res, err)
+			<-time.After(t)
+		}
+		fmt.Println("pause 300")
+		<-time.After(time.Millisecond * 300)
 	}
 }

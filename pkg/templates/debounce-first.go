@@ -14,7 +14,7 @@ import (
 //
 // Любой последующий вызов, выполненный до истечения интервала,
 // игнорируется, а вызов, выполненный после интервала, передается внутренней функции.
-func DebounceFirst(circuit services.Circuit, d time.Duration) services.Circuit {
+func DebounceFirst(service services.Effector, d time.Duration) services.Effector {
 	var threshold time.Time
 	var res string
 	var err error
@@ -32,7 +32,7 @@ func DebounceFirst(circuit services.Circuit, d time.Duration) services.Circuit {
 			return res, err
 		}
 
-		res, err = circuit(ctx)
+		res, err = service(ctx)
 		return fmt.Sprint(res, " - ", threshold), err
 	}
 }

@@ -12,7 +12,7 @@ import (
 //
 // Реализация будет ждать завершения серии вызовов,
 // прежде чем вызовет внутреннюю функцию
-func DebounceLast(circuit services.Circuit, d time.Duration) services.Circuit {
+func DebounceLast(service services.Effector, d time.Duration) services.Effector {
 	var threshold time.Time = time.Now().Add(d)
 	var ticker *time.Ticker
 	var res string
@@ -39,7 +39,7 @@ func DebounceLast(circuit services.Circuit, d time.Duration) services.Circuit {
 					case <-ticker.C:
 						m.Lock()
 						if time.Now().After(threshold) {
-							res, err = circuit(ctx)
+							res, err = service(ctx)
 							m.Unlock()
 							threshold = time.Now().Add(d)
 							return

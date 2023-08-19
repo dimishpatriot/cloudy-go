@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type Circuit func(context.Context) (string, error)
+type Effector func(context.Context) (string, error)
 
 // Фейковые сервисы для тестирования
 

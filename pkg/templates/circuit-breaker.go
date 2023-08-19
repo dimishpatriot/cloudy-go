@@ -13,7 +13,7 @@ import (
 // сервисные функции в ответ на вероятную неисправность, чтобы
 // предотвратить более крупные или каскадные отказы, устранить повторяющиеся
 // ошибки и обеспечить разумную реакцию на ошибки.
-func CircuitBreaker(circuit services.Circuit, failThreshold uint) services.Circuit {
+func CircuitBreaker(service services.Effector, failThreshold uint) services.Effector {
 	countFails := 0
 	lastAttempt := time.Now()
 	var m sync.RWMutex
@@ -30,7 +30,7 @@ func CircuitBreaker(circuit services.Circuit, failThreshold uint) services.Circu
 		}
 		m.RUnlock()
 
-		res, err := circuit(ctx)
+		res, err := service(ctx)
 		lastAttempt = time.Now()
 
 		m.Lock()

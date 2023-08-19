@@ -10,7 +10,7 @@ import (
 
 // Retry (Повтор) учитывает возможный временный характер ошибки в распределенной системе
 // и осуществляет повторные попытки выполнить неудачную операцию.
-func Retry(circuit services.Circuit, retries int, delay time.Duration) services.Circuit {
+func Retry(circuit services.Effector, retries int, delay time.Duration) services.Effector {
 	return func(ctx context.Context) (string, error) {
 		for r := 0; ; r++ {
 			res, err := circuit(ctx)

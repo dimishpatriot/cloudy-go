@@ -35,6 +35,10 @@ func main() {
 			name: "runRetry",
 			f:    runners.Retry,
 		},
+		{
+			name: "runThrottle",
+			f:    runners.Throttle,
+		},
 	}
 
 	for i, a := range apps {
