@@ -39,6 +39,10 @@ func main() {
 			name: "runThrottle",
 			f:    runners.Throttle,
 		},
+		{
+			name: "runThrottleByTokens",
+			f:    runners.ThrottleByTokens,
+		},
 	}
 
 	for i, a := range apps {

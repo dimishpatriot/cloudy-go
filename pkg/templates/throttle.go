@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/dimishpatriot/cloudy-go/pkg/services"
@@ -48,5 +49,44 @@ func Throttle(s services.Effector, max uint, d time.Duration) services.Effector 
 		idx++
 		res, _ = s(ctx)
 		return fmt.Sprintf("add %d\t - %s", idx-1, res), nil
+	}
+}
+
+// ThrottleByTokens - дроссельная заслонка с "жетонами".
+// Ограничивает число запросов за единицу времени. Реализация предусматривает заполнение (refill) условными жетонами
+// через определенную единицу времени.
+func ThrottleByTokens(s services.Effector, max uint, d time.Duration) services.Effector {
+	tokens := max
+	refill := max
+	var once sync.Once
+
+	return func(ctx context.Context) (string, error) {
+		if ctx.Err() != nil {
+			return "", ctx.Err()
+		}
+		once.Do(func() {
+			ticker := time.NewTicker(d)
+
+			go func() {
+				defer ticker.Stop()
+				for {
+					select {
+					case <-ctx.Done():
+						return
+					case <-ticker.C:
+						t := tokens + refill
+						if t > max {
+							t = max
+						}
+						tokens = t
+					}
+				}
+			}()
+		})
+		if tokens <= 0 {
+			return "*****", errors.New("429")
+		}
+		tokens--
+		return s(ctx)
 	}
 }

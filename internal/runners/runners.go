@@ -85,7 +85,15 @@ func Retry() {
 
 func Throttle() {
 	th := templates.Throttle(services.GetTime, 4, time.Millisecond*200)
+	runThreeSeries(th)
+}
 
+func ThrottleByTokens() {
+	th := templates.ThrottleByTokens(services.GetTime, 4, time.Millisecond*200)
+	runThreeSeries(th)
+}
+
+func runThreeSeries(th services.Effector) {
 	for i := 0; i < 3; i++ {
 		for j := 0; j < 30; j++ {
 			res, err := th(context.Background())
