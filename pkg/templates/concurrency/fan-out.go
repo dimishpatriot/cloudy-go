@@ -1,4 +1,4 @@
-package templates
+package concurrency
 
 // FanOut - демультиплексирует (разделяет) входной канал на
 // заданное число выходных

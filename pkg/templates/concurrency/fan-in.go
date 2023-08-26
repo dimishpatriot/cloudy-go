@@ -1,4 +1,4 @@
-package templates
+package concurrency
 
 import "sync"
 
