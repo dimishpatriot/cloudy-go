@@ -16,39 +16,39 @@ type App struct {
 func main() {
 	apps := []App{
 		{
-			name: "runContextCancelling",
+			name: "ContextCancelling",
 			f:    runners.ContextCancelling,
 		},
 		{
-			name: "runBreaker",
+			name: "CircuitBreaker",
 			f:    runners.CircuitBreaker,
 		},
 		{
-			name: "runDebounceFirst",
+			name: "DebounceFirst",
 			f:    runners.DebounceFirst,
 		},
 		{
-			name: "runDebounceLast",
+			name: "DebounceLast",
 			f:    runners.DebounceLast,
 		},
 		{
-			name: "runRetry",
+			name: "Retry",
 			f:    runners.Retry,
 		},
 		{
-			name: "runThrottle",
+			name: "Throttle",
 			f:    runners.Throttle,
 		},
 		{
-			name: "runThrottleByTokens",
+			name: "ThrottleByTokens",
 			f:    runners.ThrottleByTokens,
 		},
 		{
-			name: "runFunIn",
+			name: "FunIn",
 			f:    runners.FanIn,
 		},
 		{
-			name: "runFunOut",
+			name: "FunOut",
 			f:    runners.FanOut,
 		},
 	}
@@ -66,6 +66,6 @@ func main() {
 		log.Fatal("bad answer")
 	}
 
-	log.Printf("\n\nstart app: %s\n\n", apps[idx].name)
+	log.Printf("\n\nstart template - %s -\n\n", apps[idx].name)
 	apps[idx].f()
 }

@@ -24,9 +24,9 @@ func ContextCancelling() {
 	for i := 0; i < 5; i++ {
 		err := templates.Stream(ctx, out)
 		if err != nil {
-			fmt.Printf("%d: timeout: %s\n", i, err)
+			fmt.Printf("%d:\ttimeout:\t%s\n", i, err)
 		} else {
-			fmt.Printf("%d: result: %s\n", i, <-out)
+			fmt.Printf("%d:\tresult:\t%s\n", i, <-out)
 		}
 	}
 }
@@ -35,12 +35,12 @@ func CircuitBreaker() {
 	br := templates.CircuitBreaker(services.RandomSuccess, 2)
 
 	for i := 0; i < 100; i++ {
-		fmt.Printf("%d: ", i)
+		fmt.Printf("%d:\t", i)
 		res, err := br(context.Background())
 		if err != nil {
-			fmt.Printf("error: %s\n", err)
+			fmt.Printf("error:\t\t%s\n", err)
 		} else {
-			fmt.Printf("success: %s\n", res)
+			fmt.Printf("success:\t%s\n", res)
 		}
 		<-time.After(100 * time.Millisecond)
 	}
