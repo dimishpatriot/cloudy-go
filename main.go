@@ -43,6 +43,14 @@ func main() {
 			name: "runThrottleByTokens",
 			f:    runners.ThrottleByTokens,
 		},
+		{
+			name: "runFunIn",
+			f:    runners.FanIn,
+		},
+		{
+			name: "runFunOut",
+			f:    runners.FanOut,
+		},
 	}
 
 	for i, a := range apps {
@@ -58,6 +66,6 @@ func main() {
 		log.Fatal("bad answer")
 	}
 
-	log.Printf("\nstart app: %s\n", apps[idx].name)
+	log.Printf("\n\nstart app: %s\n\n", apps[idx].name)
 	apps[idx].f()
 }
