@@ -1,10 +1,12 @@
 package runners
 
 import (
+	"context"
 	"fmt"
 	"sync"
 	"time"
 
+	"github.com/dimishpatriot/cloudy-go/pkg/services"
 	"github.com/dimishpatriot/cloudy-go/pkg/templates/concurrency"
 )
 
@@ -55,4 +57,15 @@ func FanOut() {
 	}
 
 	wg.Wait()
+}
+
+func Future() {
+	ctx := context.Background()
+	future := services.SlowFunc(ctx)
+	res, err := future.Result()
+	if err != nil {
+		fmt.Println("error:", err)
+		return
+	}
+	fmt.Println(res)
 }

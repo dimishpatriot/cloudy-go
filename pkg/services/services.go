@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+
+	"github.com/dimishpatriot/cloudy-go/pkg/templates/concurrency"
 )
 
 type Effector func(context.Context) (string, error)
@@ -44,4 +46,22 @@ func SlowOps(ctx context.Context) (string, error) {
 	t := time.Duration(rand.Intn(6)) * time.Second
 	<-time.After(t)
 	return t.String(), ctx.Err()
+}
+
+func SlowFunc(ctx context.Context) concurrency.Future {
+	resCh := make(chan string)
+	errCh := make(chan error)
+
+	go func() {
+		select {
+		case <-time.After(time.Second * 2):
+			resCh <- "I slept for 2 seconds"
+			errCh <- nil
+		case <-ctx.Done():
+			resCh <- ""
+			errCh <- ctx.Err()
+		}
+	}()
+
+	return &concurrency.InnerFuture{ResCh: resCh, ErrCh: errCh}
 }

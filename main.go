@@ -51,6 +51,10 @@ func main() {
 			name: "FunOut",
 			f:    runners.FanOut,
 		},
+		{
+			name: "Future",
+			f:    runners.Future,
+		},
 	}
 
 	for i, a := range apps {
